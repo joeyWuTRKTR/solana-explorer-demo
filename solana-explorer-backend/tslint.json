@@ -1,0 +1,19 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "triple-equals": [
+            true,
+            "allow-null-check"
+        ]
+    },
+    "linterOptions": {
+        "exclude": [
+            "**/node_modules/**"
+        ]
+    },
+    "rulesDirectory": []
+}

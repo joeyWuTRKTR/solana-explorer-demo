@@ -1,0 +1,20 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# misc
+.DS_Store
+
+# typescript
+*.tsbuildinfo
+
+# logs
+*.log
+
+# lockfiles
+package-lock.json
