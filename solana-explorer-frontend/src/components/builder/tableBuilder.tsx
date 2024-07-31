@@ -43,7 +43,14 @@ export const buildRecentBlockTable = (recentBlockList: BasicBlockInfo[]) => {
             {shortenStringWithDot(blockhash, 16)}
           </td>
           <td className="w-1/8 px-3 py-3">{processedTransactionsCount}</td>
-          <td className="w-1/8 px-3 py-3">{`${rewards[0].pubkey} \n ${rewards[0].lamports / 100000000} $SOL`}</td>
+          <td className="w-1/8 px-3 py-3">
+            <div className="w-2/3 mx-auto break-words">
+              {`${rewards[0].pubkey}`}
+            </div>
+            <div>
+              {`${rewards[0].lamports / 100000000} $SOL`}
+            </div>
+          </td>
           <td className="w-1/8 px-3 py-3">{datetimeUtilNow}</td>
         </tr>);
     });
@@ -184,7 +191,9 @@ export const buildTransactionDetailTable = (transactionDetail: TransactionDetail
             <tr className="bg-white border-b bg-zinc-800 dark:border-zinc-700">
               <td className="p-6 py-3">Signature</td>
               <td className="p-6 py-3 text-sky-400">
-                {transactionDetail.signature}
+                <div className="w-2/3 break-words">
+                  {transactionDetail.signature}
+                </div>
               </td>
             </tr>
             <tr className="bg-white border-b bg-zinc-800 dark:border-zinc-700">
@@ -285,7 +294,6 @@ export const buildInstructionListTable = (instruction: Instruction) => {
 
   return null;
 };
-
 
 export const buildLogMessageTable = (logMessages: string[]) => {
   if (logMessages && logMessages.length > 0) {
