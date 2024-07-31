@@ -13,11 +13,11 @@ export const buildRecentBlockTable = (recentBlockList: BasicBlockInfo[]) => {
     const header = (
       <thead className="text-s text-gray-700 uppercase bg-zinc-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th className="w-1/8 px-3 py-3">Slot</th>
-          <th className="w-1/2 px-3 py-3">Blockhash</th>
-          <th className="w-1/8 px-3 py-3">Transactions</th>
-          <th className="w-1/8 px-3 py-3">Rewards</th>
-          <th className="w-1/8 px-3 py-3">Time</th>
+          <th className="px-3 py-3">Slot</th>
+          <th className="px-3 py-3">Blockhash</th>
+          <th className="px-3 py-3">Transactions</th>
+          <th className="px-3 py-3">Rewards</th>
+          <th className="px-3 py-3">Time</th>
         </tr>
       </thead>
     );
@@ -28,7 +28,7 @@ export const buildRecentBlockTable = (recentBlockList: BasicBlockInfo[]) => {
 
       return (
         <tr key={i + 1} className="text-center bg-white border-b bg-zinc-800 dark:border-zinc-700">
-          <td className="w-1/8 px-3 py-3">
+          <td className="px-3 py-3">
             <Link
               className={"inline-flex rounded-full px-3 py-1.5 text-sky-400 hover:text-indigo-500 [&.active]:bg-indigo-100 [&.active]:text-indigo-600 active}"}
               href={{
@@ -39,19 +39,19 @@ export const buildRecentBlockTable = (recentBlockList: BasicBlockInfo[]) => {
               {blockNumber}
             </Link>
           </td>
-          <td className="w-1/2 px-3 py-3">
+          <td className="px-3 py-3">
             {shortenStringWithDot(blockhash, 16)}
           </td>
-          <td className="w-1/8 px-3 py-3">{processedTransactionsCount}</td>
-          <td className="w-1/8 px-3 py-3">
-            <div className="w-2/3 mx-auto break-words">
+          <td className="px-3 py-3">{processedTransactionsCount}</td>
+          <td className="px-3 py-3">
+            <div className="w-80 mx-auto break-words">
               {`${rewards[0].pubkey}`}
             </div>
             <div>
               {`${rewards[0].lamports / 100000000} $SOL`}
             </div>
           </td>
-          <td className="w-1/8 px-3 py-3">{datetimeUtilNow}</td>
+          <td className="px-3 py-3">{datetimeUtilNow}</td>
         </tr>);
     });
     return (
