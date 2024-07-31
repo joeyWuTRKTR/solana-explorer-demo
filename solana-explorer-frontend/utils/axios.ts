@@ -35,7 +35,6 @@ export const getBlockDetail = async (slot: string) => {
     }
     return null;
   } catch (error) {
-    console.log(`### error: ${JSON.stringify(error)}`);
     return null;
   }
 };

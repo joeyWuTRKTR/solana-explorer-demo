@@ -1,5 +1,4 @@
 import solanaWeb3, {
-  Commitment,
   ParsedInstruction,
   TransactionConfirmationStatus,
   TransactionVersion,
@@ -16,31 +15,32 @@ enum SEARCH_TYPE {
 
 type ParsedBlockTransaction = {
   result: string,
+  slot: number,
   signature: string,
-  fee: number,
-  computeUnitsConsumed: number,
+  fee: number | undefined,
+  computeUnitsConsumed: number | undefined,
 }
 
 type Transaction = {
   type: SEARCH_TYPE.TRANSACTION;
   signature: string;
   result: string;
-  timestamp: number;
-  confirmationStatus: TransactionConfirmationStatus;
-  confirmations: number | null;
+  timestamp: number | null | undefined;
+  confirmationStatus: TransactionConfirmationStatus | undefined;
+  confirmations: number | null | undefined;
   slot: number;
   recentBlockhash: string;
-  fee: number;
-  computeUnitsConsumed: number;
-  version: TransactionVersion;
+  fee: number | undefined;
+  computeUnitsConsumed: number | undefined;
+  version: TransactionVersion | undefined;
   instructions: ParsedInstruction[];
-  logMessages?: Array<string> | null
+  logMessages?: string[] | null
 }
 
 type Block = {
   type: SEARCH_TYPE.BLOCK;
   blockhash: string;
-  timestamp: number;
+  timestamp: number | null;
   epoch: number;
   parentSlot: number;
   parentBlockhash: string;
@@ -52,9 +52,9 @@ type Block = {
 type BasicBlockInfo = {
   blockNumber: number;
   blockhash: string;
-  timestamp: number;
+  timestamp: number | null;
   processedTransactionsCount: number;
-  rewards: {
+  rewards?: {
       pubkey: string;
       lamports: number;
   }[];
@@ -66,32 +66,28 @@ export const getBlockList = async (): Promise<BasicBlockInfo[]> => {
   });
   const startSlot = currentSlot - 4;
 
-  console.log(`### get currentSlot: ${currentSlot}`);
-
   const blockNumbers = await solanaConnection.getBlocks(startSlot, currentSlot);
   blockNumbers.sort((a, b) => b - a);
 
-  console.log(`### get blockNumbers: ${blockNumbers}`);
-
-  const blockInfoList = [];
+  const blockInfoList: BasicBlockInfo[] = [];
   for (const blockNumber of blockNumbers) {
     const blockInfo = await solanaConnection.getParsedBlock(blockNumber, {
       commitment: 'finalized',
       maxSupportedTransactionVersion: 0,
     });
 
-    console.log(`### get blockNumber info: ${blockNumber}`);
+    logger.info(`get ${blockNumber} block info`);
 
     const { transactions } = blockInfo;
 
     const processedTransactionsCount = transactions.length;
 
     blockInfoList.push({
-        blockNumber: blockNumber,
+        blockNumber,
         blockhash: blockInfo.blockhash,
         timestamp: blockInfo.blockTime,
         processedTransactionsCount,
-        rewards: blockInfo.rewards.map(reward => {
+        rewards: blockInfo.rewards && blockInfo.rewards.map(reward => {
             return {
                 pubkey: reward.pubkey,
                 lamports: reward.lamports,
@@ -101,13 +97,21 @@ export const getBlockList = async (): Promise<BasicBlockInfo[]> => {
   }
 
   if (blockInfoList && blockInfoList.length > 0) {
-    blockInfoList.sort((a, b) => b.timestamp - a.timestamp);
+    blockInfoList.sort((a, b) => {
+      if (a?.timestamp === null) {
+        return 1;
+      } else if (b?.timestamp === null) {
+        return -1;
+      } else {
+        return b.timestamp - a.timestamp;
+      }
+    });
   }
 
   return blockInfoList;
 }
 
-export const getBlock = async (blockNumber: number): Promise<Block> => {
+export const getBlock = async (blockNumber: number): Promise<Block | undefined> => {
   const block = await solanaConnection.getParsedBlock(blockNumber, {
     maxSupportedTransactionVersion: 0,
     rewards: false,
@@ -130,11 +134,11 @@ export const getBlock = async (blockNumber: number): Promise<Block> => {
       .map(tx => {
         const {meta} = tx;
         return {
-          result: meta.err === null ? 'Success' : 'Failed',
+          result: meta?.err === null ? 'Success' : 'Failed',
           slot: blockNumber,
           signature: tx.transaction.signatures[0],
-          fee: meta.fee,
-          computeUnitsConsumed: meta.computeUnitsConsumed,
+          fee: meta?.fee,
+          computeUnitsConsumed: meta?.computeUnitsConsumed,
         };
       })
       .sort((a, b) => b.slot - a.slot);
@@ -152,7 +156,7 @@ export const getBlock = async (blockNumber: number): Promise<Block> => {
   }
 };
 
-export const getTransaction = async (signature: string): Promise<Transaction> => {
+export const getTransaction = async (signature: string): Promise<Transaction | undefined> => {
   const transactionDetail = await solanaConnection.getParsedTransaction(signature, {
     maxSupportedTransactionVersion: 0,
   });
@@ -171,14 +175,14 @@ export const getTransaction = async (signature: string): Promise<Transaction> =>
   return {
     type: SEARCH_TYPE.TRANSACTION,
     signature: transaction.signatures[0],
-    result: meta.err === null ? 'Success' : 'Failed',
+    result: meta?.err === null ? 'Success' : 'Failed',
     timestamp: blockTime,
-    confirmationStatus: value.confirmationStatus,
-    confirmations: value.confirmations,
+    confirmationStatus: value?.confirmationStatus,
+    confirmations: value?.confirmations,
     slot,
     recentBlockhash,
-    fee: meta.fee,
-    computeUnitsConsumed: meta.computeUnitsConsumed,
+    fee: meta?.fee,
+    computeUnitsConsumed: meta?.computeUnitsConsumed,
     version,
     instructions,
     logMessages: meta?.logMessages,
