@@ -2,9 +2,9 @@ import 'dotenv/config';
 import { v1 as uuid } from 'node-uuid';
 import { createNamespace, getNamespace } from 'continuation-local-storage';
 
-const myRequest = createNamespace(process.env.SESSION_NAMESPACE);
+const myRequest = createNamespace('solana-explorer-backend');
 
-const setSessionId = (req, res, next) => {
+const setSessionId = (req: any, res: any, next: any) => {
     myRequest.run(() => {
         myRequest.set('sessionId', uuid());
         next();
@@ -12,8 +12,8 @@ const setSessionId = (req, res, next) => {
 };
 
 const getSessionId = () => {
-    const session = getNamespace(process.env.SESSION_NAMESPACE);
-    return session.get('sessionId');
+    const session = getNamespace('solana-explorer-backend');
+    return session?.get('sessionId');
 };
 
 export {

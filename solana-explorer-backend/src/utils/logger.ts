@@ -8,7 +8,7 @@ const initLog4js = () => {
         type: 'pattern',
         pattern: '%[[%d] [%p] %c [%x{reqId}]%] %m',
         tokens: {
-            reqId: logEvent => getSessionId()
+            reqId: () => getSessionId()
         }
     };
     const appenders = {
