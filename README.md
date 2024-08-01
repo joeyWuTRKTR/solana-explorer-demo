@@ -1,31 +1,43 @@
-# It's a full-stack project for simulation of a Solana explorer.
+## Introduction 
+It's a full-stack project for simulation of a Solana explorer.
 
-## Frontend
+## Completed features:
+1. show block list in main page
+2. search block by slot
+3. search transaction by signature
+4. show block detail
+5. show transaction detail
+6. show transaction list in block detail
+
+# Architecture
+### Frontend
 - Node.js => v18
 - React => ^18.3.1
 - Next.js => ^14.2.5
 - Tailwind CSS => ^3.4.6
 
 Next is a React framework providing multiple features like server-side rendering and dymanic routing
-Tailwind CSS is a utility-first CSS framework for styling.
+
+Tailwind CSS is a utility-first CSS framework for styling.  
 
 
-## Backend
+### Backend
 - Node.js => v18
 - Express => ^4.19.2
 - @solana/web3.js => ^1.95.1
 
 Express is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
-@solana/web3.js is a JavaScript library for interacting with the Solana blockchain.
+
+@solana/web3.js is a JavaScript library for interacting with the Solana blockchain.  
 
 
-## How to build
+## How to install & build
+no configuration needed, just run the following command to start the project.
 ```bash
 
 git clone https://github.com/joeyWuTRKTR/solana-explorer-demo.git
 
 docker compose up
-
 ```
 
 ## Demo
